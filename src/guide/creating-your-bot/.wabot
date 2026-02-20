@@ -1,0 +1,19 @@
+const { Client, LocalAuth } = require('whatsapp-web.js');
+
+const client = new Client({
+    authStrategy: new LocalAuth()
+});
+
+client.on('message', async (message) => {
+    const linkRegex = /(https?:\/\/[^\s]+)/g;
+    const link = message.body.match(linkRegex);
+
+    if (link) {
+        // Cek link disini, contoh:
+        if (link[0].includes('phising.com')) {
+            // Tambah counter pelanggaran
+            // Kalau 3x, kick member
+        }
+    }
+});
+

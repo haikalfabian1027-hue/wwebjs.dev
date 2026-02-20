@@ -1,0 +1,27 @@
+const { Client, LocalAuth } = require('whatsapp-web.js');
+
+const client = new Client({
+    authStrategy: new LocalAuth()
+});
+
+let violations = {};
+
+client.on('message', async (message) => {
+    const linkRegex = /(https?:\/\/[^\s]+)/g;
+    const link =https://chat.whatsapp.com/FsLSMDrAWrkLSCeFdeJSxr?mode=gi_t message.body.match(linkRegex);
+
+    if (link) {
+        const sender = message.from;
+        if (!violations[sender]) violations[sender] = 0;
+
+        // Cek link disini, contoh:
+        if (link[0].includes('phising.com')) {
+            violations[sender]++;
+            if (violations[sender] >= 3) {
+                const chat = await message.getChat();
+                chat.removeParticipants([sender]);
+                delete violations[sender];
+            }
+        }
+    }
+});
